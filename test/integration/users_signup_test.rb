@@ -27,6 +27,7 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
       }
     end
     assert_template 'users/show'
+    assert flash[:success]
   end
 
 end
