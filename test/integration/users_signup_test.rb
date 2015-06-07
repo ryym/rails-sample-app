@@ -13,6 +13,7 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
       }
     end
     assert_template 'users/new'
+    assert_select '#error_explanation'
   end
 
   test "valid signup information" do
