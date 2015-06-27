@@ -26,6 +26,7 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
       }
     end
     assert_template 'users/show'
+    assert is_logged_in?, 'The user has singed up logs in automatically.'
   end
 
 end
