@@ -39,6 +39,7 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
   end
 
   test 'logout without session' do
+    # Simulate a user clicking logout in a second window.
     delete logout_path
   end
 
@@ -49,5 +50,15 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
     assert_not flash.empty?
     get root_path
     assert flash.empty?, 'The error message has disappeared'
+  end
+
+  test 'login with remembering' do
+    log_in_as(@user, remember_me: '1')
+    assert_not_nil cookies['remember_token']
+  end
+
+  test 'login without remembering' do
+    log_in_as(@user, remember_me: '0')
+    assert_nil cookies['remember_token']
   end
 end
