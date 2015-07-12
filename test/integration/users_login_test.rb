@@ -38,6 +38,10 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
     assert_select 'a[href=?]', user_path(@user), count: 0
   end
 
+  test 'logout without session' do
+    delete logout_path
+  end
+
   test 'login with invalid information' do
     get login_path
     assert_template 'sessions/new'
