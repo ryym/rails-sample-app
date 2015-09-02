@@ -62,4 +62,12 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
     log_in_as(@user, remember_me: '0')
     assert_nil cookies['remember_token']
   end
+
+  test 'friendly forwarding after logging' do
+    get edit_user_path(@user)
+    assert_redirected_to login_url
+
+    log_in_as(@user)
+    assert_redirected_to edit_user_path(@user)
+  end
 end
