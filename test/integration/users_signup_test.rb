@@ -13,6 +13,7 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
       }
     end
     assert_template 'users/new'
+    assert_select '#error_explanation'
   end
 
   test "valid signup information" do
@@ -27,6 +28,7 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
     end
     assert_template 'users/show'
     assert is_logged_in?, 'The user has singed up logs in automatically.'
+    assert flash[:success]
   end
 
 end
