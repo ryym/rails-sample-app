@@ -3,7 +3,9 @@ def create_user(name, email, &block)
     name: name,
     email: email,
     password: 'password',
-    password_confirmation: 'password'
+    password_confirmation: 'password',
+    activated: true,
+    activated_at: Time.zone.now
   )
   block.call user if block_given?
   user.save
