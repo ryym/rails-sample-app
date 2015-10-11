@@ -13,7 +13,7 @@ class UsersIndexTest < ActionDispatch::IntegrationTest
     assert_template 'users/index'
     assert_select 'div.pagination'
     assert_select 'ul.users > li', 30
-    User.paginate(page: 1).each do |user|
+    User.where(activated: true).paginate(page: 1).each do |user|
       assert_select 'a[href=?]', user_path(user), text: user.name
     end
   end
@@ -39,4 +39,20 @@ class UsersIndexTest < ActionDispatch::IntegrationTest
     get users_path
     assert_select 'a', text: 'delete', count: 0
   end
+
+  test 'index excluding inactivated users' do
+    log_in_as @user
+    get users_path
+    assert_select 'ul.users > li', 30
+    assert_select 'a',
+      { count: 0, text: 'Inactivated User' },
+      'The page must contain only activated users.'
+  end
+
+   test 'show an inactivated user' do
+     log_in_as @user
+     ia = users(:inactivated)
+     get user_path(ia)
+     assert_redirected_to root_url
+   end
 end
