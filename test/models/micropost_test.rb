@@ -4,10 +4,9 @@ class MicropostTest < ActiveSupport::TestCase
 
   def setup
     @user = users(:michael)
-    # XXX: This code is not idiomatically correct.
-    @micropost = Micropost.new(
-      content: 'Lorem ipsum',
-      user_id: @user.id
+    # `user_id` is set automatically.
+    @micropost = @user.microposts.build(
+      content: 'Lorem ipsum'
     )
   end
 
