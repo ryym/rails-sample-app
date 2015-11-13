@@ -2,6 +2,10 @@ class Micropost < ActiveRecord::Base
   belongs_to :user
   default_scope { order(created_at: :desc) }
 
+  # When a record is saved,
+  # the uploaded picture is stored automatically.
+  mount_uploader :picture, PictureUploader
+
   validates :user_id,
     presence: true
   validates :content,
