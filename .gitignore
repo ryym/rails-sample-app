@@ -21,3 +21,6 @@
 
 # Ignore the tags file.
 tags
+
+# Ignore uploaded test images.
+/public/uploads/
