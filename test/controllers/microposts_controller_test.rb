@@ -19,4 +19,21 @@ class MicropostsControllerTest < ActionController::TestCase
     end
     assert_redirected_to login_url
   end
+
+  test 'should delete own micropost' do
+    log_in_as users(:michael)
+    assert_difference 'Micropost.count', -1 do
+      delete :destroy, id: @micropost
+    end
+    assert_redirected_to root_url
+  end
+
+  test 'should redirect destroy for wrong micropost' do
+    log_in_as users(:michael)
+    micropost = microposts(:ants)
+    assert_no_difference 'Micropost.count' do
+      delete :destroy, id: micropost
+    end
+    assert_redirected_to root_url
+  end
 end
