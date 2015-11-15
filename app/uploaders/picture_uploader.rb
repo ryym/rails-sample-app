@@ -6,6 +6,9 @@ class PictureUploader < CarrierWave::Uploader::Base
   # Resize too large images.
   process resize_to_limit: [400, 400]
 
+  # XXX:
+  #   In production, it isn't good practice to store uploaded images
+  #   in the local file system. For example, the tutorial uses Amazon S3.
   storage :file
 
   # Override the directory where uploaded files will be stored.
