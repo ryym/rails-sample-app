@@ -22,5 +22,10 @@ module SampleApp
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+
+    # This line is not necessary when running the server or unit tests,
+    # but automated tests by Guard fail unless this confiuration exists.
+    # I don't know why..
+    config.autoload_paths += Dir[Rails.root.join('app', 'uploaders')]
   end
 end
