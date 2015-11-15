@@ -3,6 +3,8 @@ require 'test_helper'
 class MicropostsInterfaceTest < ActionDispatch::IntegrationTest
   def setup
     @user = users(:michael)
+    # User with zero microposts
+    @no_post_user = users(:mallory)
   end
 
   test 'micropost interface' do
@@ -36,5 +38,37 @@ class MicropostsInterfaceTest < ActionDispatch::IntegrationTest
     # Visit a different user.
     get user_path(users(:archer))
     assert_select 'a', text: 'delete', count: 0
+  end
+
+  test 'micropost sidebar count' do
+    log_in_as(@user)
+    get root_path
+    assert_match "#{@user.microposts.count} microposts", response.body
+
+    # User with zero microposts
+    log_in_as(@no_post_user)
+    get root_path
+    assert_match '0 microposts', response.body
+
+    @no_post_user.microposts.create!( content: 'A micropost' )
+    get root_path
+    assert_match '1 micropost', response.body
+  end
+
+  test 'micropost picture uploading' do
+    log_in_as(@no_post_user)
+    get root_path
+    assert_select 'input[type=file]'
+
+    assert_difference 'Micropost.count', 1 do
+      post microposts_path, micropost: {
+        content: 'I will upload a picture!',
+        picture: fixture_file_upload('test/fixtures/rails.png', 'image/png') 
+      }
+    end
+    assert @no_post_user.microposts.first.picture?, 'should have a picture'
+
+    follow_redirect!
+    assert_select '.content img'
   end
 end
