@@ -7,7 +7,14 @@ Rails.application.routes.draw do
   get    'login'  => 'sessions#new'
   post   'login'  => 'sessions#create'
   delete 'logout' => 'sessions#destroy'
-  resources :users
+  resources :users do
+    member do
+      # Add a route like '/usrs/1/following'.
+      get :following, :followers
+    end
+    # To add a route like '/users/tigers',
+    # use the 'collection' block instead of the 'member'.
+  end
   resources :account_activations, only: [:edit]
   resources :password_resets,     only: [:new, :create, :edit, :update]
   resources :microposts,          only: [:create, :destroy]
