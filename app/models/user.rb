@@ -97,9 +97,10 @@ class User < ActiveRecord::Base
     reset_sent_at < 2.hours.ago
   end
 
+  # Returns a user's status feed.
   def feed
-    # XXX: Currently, this is equivalent to 'microposts'.
-    Micropost.where('user_id = ?', id)
+    # Note: 'following_ids' is defined automatically by rails.
+    Micropost.where('user_id IN (?) OR user_id = ?', following_ids, id)
   end
 
   # Follows a user.
