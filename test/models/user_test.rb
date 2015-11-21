@@ -3,8 +3,12 @@ require 'test_helper'
 class UserTest < ActiveSupport::TestCase
 
   def setup
-    @user = User.new( name: "Example User", email: "user@example.com",
-                      password: "foobar", password_confirmation: "foobar" )
+    @user = User.new(
+      name: "Example User",
+      email: "user@example.com",
+      password: "foobar",
+      password_confirmation: "foobar"
+    )
   end
 
   test "should be valid" do
@@ -80,5 +84,38 @@ class UserTest < ActiveSupport::TestCase
     assert_difference 'Micropost.count', -1 do
       @user.destroy
     end
+  end
+
+  test "should follow and unfollow a user" do
+    michael = users(:michael)
+    archer  = users(:archer)
+    assert_not michael.following?(archer)
+
+    michael.follow(archer)
+    assert michael.following?(archer)
+    assert archer.followed_by?(michael)
+
+    michael.unfollow(archer)
+    assert_not michael.following?(archer)
+    assert_not archer.followed_by?(michael)
+  end
+
+  test "feed should have the right posts" do
+    michael = users(:michael)
+    archer  = users(:archer)
+    lana    = users(:lana)
+
+    def include_all?(array, subarray)
+      subarray.all? do |item|
+        array.include? item
+      end
+    end
+
+    assert include_all?(michael.feed, lana.microposts),
+     'Posts from followed user should be included'
+    assert include_all?(michael.feed, michael.microposts),
+     'Self posts should be included'
+    assert_not include_all?(michael.feed, archer.microposts),
+     'Posts from unfollowed user should not be included'
   end
 end
